@@ -1,0 +1,29 @@
+.tlacitka {
+  display: flex;           /* tlačítka vedle sebe */
+  gap: 10px;               /* mezera mezi tlačítky */
+}
+
+.tlacitka button {
+  width: 100px;
+  height: 50px;
+  display: flex;           /* centrování textu uvnitř tlačítka */
+  align-items: center;
+  justify-content: center;
+  border: 3px solid black;
+  background-color: rgb(184, 182, 182);
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.tlacitka button:hover {
+  width: 120px;
+  height: 60px;
+  background-color: rgb(221, 218, 218);
+  border-color: rgb(71, 71, 71);
+}
+
+.tlacitka button:active {
+  background-color: rgb(255, 143, 143);
+  border-color: rgb(255, 79, 79);
+}
