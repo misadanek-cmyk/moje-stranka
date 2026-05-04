@@ -1,37 +1,96 @@
 const vlevo = document.querySelector("#doleva");
 const vpravo = document.querySelector("#doprava");
 const zobrazit = document.querySelector("#zobrazit")
+const preskocit = document.querySelector("#preskocit")
+const pole = document.querySelector("#pole")
+const pole_vipis = document.querySelector("#info")
 
 
 let energie = 20;
-let souradnice = 0;
-let cas = 100;
+let souradnice = 1;
+
+let cas = 150;
+let ukazovaci_cas = 5000;
+
 let pohnout = "";
 let akce = "";
+let vypis = false;
+let skok = false;
+let past_ = false; 
+let zobrazeni = "";
+let vipis_text = "";
 
-let baterka = Math.floor(Math.random() * 11);
-console.log("Baterka:", baterka);
+let baterka = Math.floor((Math.random() * 10) + 1);
+let past = Math.floor((Math.random() * 10) + 1);
 
-let past = Math.floor(Math.random() * 11);
+let hraInterval;
 
+
+
+// --- EVENTY ---
 zobrazit.addEventListener("click", () => {
     akce = "zobrazit";
+    setTimeout(() => {
+        akce = "";
+    }, ukazovaci_cas);
 })
 
+
+preskocit.addEventListener("click", () => {
+    skok = true;
+})
+
+
 vpravo.addEventListener("click", () => {
-    pohnout = "vpravo";
+    if (skok){
+        if (souradnice < 9){
+            souradnice += 2;
+            energie -= 2;
+        }
+    } else {
+        if (souradnice < 10) {
+            souradnice += 1; 
+            energie -= 1;
+        }
+    }
+    skok = false;
 });
+
+
 
 vlevo.addEventListener("click", () => {
-    pohnout = "vlevo";
+    if (skok){
+        if (souradnice > 2){
+            souradnice -= 2;
+            energie -= 2;
+        }
+    } else {
+        if (souradnice > 1) {
+            souradnice -= 1; 
+            energie -= 1;
+        }
+    }
+    skok = false;
 });
 
 
+// --- GENEROVÁNÍ NOVÉ BATERKY A PASTI ---
+function vygenerovat(x){
 
-function vykresleni(past, x){
+    baterka = Math.floor(Math.random() * 10) + 1;
+
+
+    past = Math.floor(Math.random() * 10) + 1;
+
+}
+
+
+// --- VYKRESLOVÁNÍ ---
+function vykresleni(past, x, akce, baterka){
     let mapa = "";
-    console.log(past + ", " + x);
-    for (let i = 1;i <= 10; i++){
+    vipis_text = "";
+
+    for (let i = 1; i <= 10; i++){
         if (i === x && i === past && akce === "zobrazit") {
             mapa += "A";
         } else if (i === x) {
@@ -42,55 +101,64 @@ function vykresleni(past, x){
             mapa += "_";
         }
     }
-    akce = "";
+
+    if (x === baterka && !vypis) {
+        vypis = true;
+        setTimeout(() => {
+            vypis = false;
+        }, ukazovaci_cas);
+    }
+
+    if (vypis) {
+        vipis_text += ("souradnice: " + x + ", energie: " + energie + ", hledej: " + baterka);
+    } else {
+        vipis_text +=("souradnice: " + x + ", energie: " + energie);
+    }
+
+    console.log(vipis_text);
     console.log(mapa);
+
+    pole_vipis.textContent = (vipis_text);
+    pole.textContent = (mapa);
+
+
 }
 
 
-
-setInterval(() => {
+// --- START HRY ---
+function start(){
+    clearInterval(hraInterval);
+    vygenerovat(souradnice);
     
+    vypis = true;
+    setTimeout(() => {
+        vypis = false;
+    }, ukazovaci_cas);
 
-    if (pohnout == "vpravo"){
-        souradnice += 1; 
-    } else if (pohnout == "vlevo"){
-        souradnice -= 1;
-    }
-
-    if (pohnout !== ""){
-        energie -= 1;
-        //console.log("Souradnice:", souradnice);
-        //console.log("Energie:", energie);
-        pohnout = "";
-
-        vykresleni(past, souradnice)
-
-        if (souradnice == past){
+    hraInterval = setInterval(() => {
+        
+        if (souradnice === past && !past_){
             energie -= 25;
+            past_ = true;
         }
-        console.log(energie)   ;
-    }
+        if (souradnice !== past){
+            past_ = false;
+        }
 
-    if (souradnice == baterka){
-        energie += 20;
-        baterka = Math.floor(Math.random() * 11);
-        console.log("hledej:  " + baterka);
-        past = Math.floor(Math.random() * 11);
-    }
+        vykresleni(past, souradnice, akce, baterka)
 
-}, cas);
+        if (souradnice === baterka){
+            energie += 20;
+            vygenerovat(souradnice);
+        }
 
-
-
-/*
-let pocet = 0;
-
-for (let i = 1; i <= 10; i++){
-    console.log(i)
+        if (energie <= 0){
+            console.log("Konec hry");
+            clearInterval(hraInterval);
+            return;
+        }
+    }, cas);
 }
 
-while (pocet <= 10) {
-    console.log(pocet);
-    pocet += 1;
-}
-*/
+// --- SPUŠTĚNÍ HRY ---
+start();
