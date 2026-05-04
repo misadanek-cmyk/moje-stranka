@@ -2,8 +2,9 @@
   display: flex;           /* tlačítka vedle sebe */
   gap: 10px;               /* mezera mezi tlačítky */
 }
-
+ 
 .tlacitka button {
+  margin-top: 5px;
   width: 100px;
   height: 50px;
   display: flex;           /* centrování textu uvnitř tlačítka */
@@ -17,8 +18,7 @@
 }
 
 .tlacitka button:hover {
-  width: 120px;
-  height: 60px;
+  transform: translateY(5px);
   background-color: rgb(221, 218, 218);
   border-color: rgb(71, 71, 71);
 }
@@ -26,4 +26,41 @@
 .tlacitka button:active {
   background-color: rgb(255, 143, 143);
   border-color: rgb(255, 79, 79);
+}
+
+.vipis{
+  margin: 5px;
+  padding: 5px;
+  margin-top: 20px;
+
+  height: 20px;
+  width: 400px;
+
+  background-color: rgb(83, 83, 83);
+  border: 3px solid black;
+
+  -webkit-text-fill-color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.mapa{
+  margin: 5px;
+  padding: 5px;
+  margin-top: 20px;
+
+  height: 40px;
+  width: 120px;
+
+  background-color: rgb(83, 83, 83);
+  border: 3px solid black;
+
+  -webkit-text-fill-color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
